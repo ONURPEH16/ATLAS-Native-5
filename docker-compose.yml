@@ -1,0 +1,66 @@
+# ATLAS native lab: one execution account owner (Freqtrade dry-run).
+# Hummingbot and NautilusTrader are independent upstream tools, not co-owners of that wallet.
+services:
+  hub:
+    build: ./hub
+    restart: unless-stopped
+    environment:
+      DASH_PASSWORD: ${DASH_PASSWORD:?Set a strong DASH_PASSWORD in .env}
+      DASH_USER: ${DASH_USER:-admin}
+      FT_URL: http://freqtrade:8081/api/v1
+      FT_USER: native_internal
+      FT_PASSWORD: ${FT_API_PASSWORD:?Set a strong FT_API_PASSWORD in .env}
+      RESEARCH_STATUS_DIR: /research
+    volumes:
+      - research_data:/research
+    ports:
+      - "${DASH_BIND:-127.0.0.1}:8080:8080"
+    depends_on:
+      - freqtrade
+    networks: [internal]
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable
+    restart: unless-stopped
+    command: >-
+      trade --config /freqtrade/user_data/config.json
+      --strategy SampleStrategy
+      --strategy-path /freqtrade/user_data/strategies
+      --db-url sqlite:////data/atlas_paper.sqlite
+    environment:
+      FREQTRADE__API_SERVER__PASSWORD: ${FT_API_PASSWORD:?Set FT_API_PASSWORD}
+      FREQTRADE__API_SERVER__JWT_SECRET_KEY: ${FT_JWT_SECRET:?Set FT_JWT_SECRET}
+      FREQTRADE__API_SERVER__WS_TOKEN: ${FT_WS_TOKEN:?Set FT_WS_TOKEN}
+    volumes:
+      - ./engines/freqtrade/user_data:/freqtrade/user_data:ro
+      - freqtrade_data:/data
+    networks: [internal]
+    # No host-published Freqtrade API; hub alone can reach it.
+  hummingbot:
+    image: hummingbot/hummingbot:latest
+    profiles: ["hummingbot"]
+    tty: true
+    stdin_open: true
+    init: true
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - hb_conf:/home/hummingbot/conf
+      - hb_logs:/home/hummingbot/logs
+      - hb_data:/home/hummingbot/data
+    networks: [internal]
+    # Hummingbot is started with its OWN paper connector and separate virtual account.
+  nautilus:
+    build: ./engines/nautilus
+    profiles: ["nautilus"]
+    restart: unless-stopped
+    volumes:
+      - research_data:/research
+    networks: [internal]
+    # Native backtest library is installed. Does not send any exchange order.
+networks:
+  internal: {}
+volumes:
+  freqtrade_data: {}
+  research_data: {}
+  hb_conf: {}
+  hb_logs: {}
+  hb_data: {}

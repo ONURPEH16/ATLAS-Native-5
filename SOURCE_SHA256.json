@@ -1,0 +1,27 @@
+{
+  "freqtrade-develop": {
+    "uploaded_zip_sha256": "c1b90754f4cfa0f4c3919713ca171a472f0222931b280ef748209933355f2745",
+    "uploaded_size_bytes": 20668988,
+    "repo": "https://github.com/freqtrade/freqtrade/tree/develop"
+  },
+  "hummingbot-master": {
+    "uploaded_zip_sha256": "f7ebc3007115f5a5e6a061d22ce55a9922c2e946325c70773257b33c5e4b8bb8",
+    "uploaded_size_bytes": 4153930,
+    "repo": "https://github.com/hummingbot/hummingbot/tree/master"
+  },
+  "nautilus_trader-develop": {
+    "uploaded_zip_sha256": "64d70cb7db107e109cafed2c7943a65361cc7d3ec2e86922a58c115a0153e19e",
+    "uploaded_size_bytes": 36321965,
+    "repo": "https://github.com/nautechsystems/nautilus_trader/tree/develop"
+  },
+  "ccxt-master": {
+    "uploaded_zip_sha256": "a1a412f96a887f1ee855b624381a5b5786f4e78b43f55a8a94c7842114b3fdfe",
+    "uploaded_size_bytes": 100159578,
+    "repo": "https://github.com/ccxt/ccxt/tree/master"
+  },
+  "polars-main": {
+    "uploaded_zip_sha256": "d4a7e0d8c3ba0956926aa43610aaec872e6aa1441ace027608e416caeb6cd0ad",
+    "uploaded_size_bytes": 10306944,
+    "repo": "https://github.com/pola-rs/polars/tree/main"
+  }
+}
