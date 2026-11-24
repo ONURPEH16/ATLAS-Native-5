@@ -10,4 +10,7 @@ RUN chown -R ftuser:ftuser /data /freqtrade/user_data
 USER ftuser
 
 EXPOSE 8081
+
+ENTRYPOINT ["/bin/sh", "-c", "sudo /bin/chown -R ftuser:ftuser /data && exec freqtrade \"$@\"", "--"]
+
 CMD ["trade", "--config", "/freqtrade/user_data/config.json", "--strategy", "SampleStrategy", "--strategy-path", "/freqtrade/user_data/strategies", "--db-url", "sqlite:////data/atlas_paper.sqlite"]
