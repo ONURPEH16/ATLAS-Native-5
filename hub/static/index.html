@@ -1,16 +1,383 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ATLAS · Native Engines</title><style>
-:root{color-scheme:dark;--bg:#080d18;--panel:#111c2d;--line:#283a51;--muted:#97a7bc;--green:#4fe2ae;--orange:#ffca79;--blue:#7ebafa;--red:#ff7b81}*{box-sizing:border-box}body{font-family:Inter,system-ui,'Segoe UI',Arial,sans-serif;color:#ecf4ff;background:radial-gradient(ellipse at top right,#18304f 0,transparent 48%),var(--bg);margin:0;min-height:100vh}main{max-width:1330px;padding:30px 22px 80px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:0 0 24px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:14px}.logo{width:51px;height:51px;display:grid;place-items:center;background:linear-gradient(140deg,#54dcc7,#4b82e9);border-radius:15px;color:#071222;font-weight:900;font-size:27px}.brand h1{font-size:24px;margin:0;letter-spacing:1.5px}.sub{color:var(--muted);font-size:13px}.badge{padding:8px 12px;border:1px solid #35645e;border-radius:99px;color:var(--green);font-weight:700;font-size:11px;background:#12372f}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card,.panel{border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#172439,#0f1929);padding:20px;box-shadow:0 12px 32px #0002}.k{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.4px}.v{font-size:30px;line-height:1.4;font-weight:800;margin-top:7px}.v.small{font-size:19px}.green{color:var(--green)}.orange{color:var(--orange)}.red{color:var(--red)}.sections{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:17px}.panel h2{font-size:17px;margin:0 0 17px}button{border:1px solid #37506c;background:#203652;color:#e6f4ff;border-radius:10px;padding:12px 15px;font-weight:700;cursor:pointer}button.primary{background:#306b5b;border-color:#389c7d}button:hover{filter:brightness(1.15)}button:disabled{opacity:.35;cursor:not-allowed}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.label{font-size:12px;color:var(--muted)}.eng{display:grid;grid-template-columns:1fr auto;align-items:center;gap:7px;padding:13px 0;border-top:1px solid var(--line)}.eng strong{font-size:14px}.engine-state{color:var(--orange);font-size:12px}.thin{font-weight:400}.box-note{margin-top:14px;padding:14px;border:1px solid #564b32;border-radius:10px;color:#ffddaa;background:#2b281d;font-size:12px;line-height:1.6}.tableWrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:500px}.table th{text-align:left;color:var(--muted);font-size:12px;font-weight:500;padding:12px 10px;border-bottom:1px solid var(--line)}.table td{padding:13px 10px;border-bottom:1px solid #26374a;font-size:13px}.marketlist{display:flex;gap:7px;flex-wrap:wrap;max-height:194px;overflow:auto}.marketlist span{font-size:11px;border:1px solid #354962;border-radius:7px;color:#c5d8ee;padding:6px 8px}.foot{font-size:12px;color:var(--muted);line-height:1.7;margin-top:14px}.alert{color:var(--red)}.statusdots{display:flex;gap:7px;align-items:center}code{font-family:ui-monospace,monospace;color:#a7dcff}@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.sections{grid-template-columns:1fr}.v{font-size:25px}}@media(max-width:460px){main{padding:17px 12px}.grid{gap:9px}.card,.panel{padding:15px}.brand h1{font-size:20px}}
-</style></head><body><main><header><div class="brand"><div class="logo">A</div><div><h1>ATLAS <span style="color:var(--green)">NATIVE</span></h1><div class="sub">5 kaynak proje · 3 ayrı motor · 1 sanal cüzdan sahibi</div></div></div><div class="statusdots"><span id="connected" class="badge">BAĞLANIYOR…</span><span class="sub">GERÇEK PARA KAPALI</span></div></header>
-<div class="grid"><section class="card"><div class="k">SANAL BAŞLANGIÇ KASASI</div><div class="v">100 <span style="font-size:18px">USDT</span></div><div class="sub">Yalnız Freqtrade dry-run</div></section><section class="card"><div class="k">GÜNCEL SANAL BAKİYE</div><div class="v" id="balance">—</div><div class="sub">Motor verisinden</div></section><section class="card"><div class="k">AÇIK POZİSYON</div><div class="v" id="positions">—</div><div class="sub">Gerçek Freqtrade dry-run kayıtları</div></section><section class="card"><div class="k">BYBIT AKTİF USDT PERP</div><div class="v" id="coinCount">—</div><div class="sub">CCXT ile dinamik keşif · sabit 12 yok</div></section></div>
-<div class="sections"><section class="panel"><h2>İşlem motorları</h2><div class="eng"><div><strong>Freqtrade</strong><div class="label">Birincil · native SampleStrategy · dry-run</div></div><span id="ftState" class="engine-state">Bağlantı bekleniyor</span></div><div class="eng"><div><strong>Hummingbot</strong><div class="label">Bağımsız paper-trade stratejileri · kendi uygulaması</div></div><span class="engine-state">Ayrı servis / isteğe bağlı</span></div><div class="eng"><div><strong>NautilusTrader</strong><div class="label">Ayrı event-driven backtest çalışma ortamı</div></div><span id="ntState" class="engine-state">İsteğe bağlı</span></div><div class="eng"><div><strong>CCXT + Polars</strong><div class="label">Piyasa keşfi ve gerçek kayıtlardan analiz</div></div><span class="engine-state green">Hub kitaplıkları</span></div><div class="actions"><button class="primary" onclick="send('start')">Sanal botu başlat</button><button onclick="send('pause')">Yeni girişleri durdur</button><button onclick="download()">Günlük JSON indir</button><button onclick="refresh()">Yenile</button></div><div class="box-note">Bu panel yalnız Freqtrade sanal cüzdanını kontrol eder. Hummingbot ve NautilusTrader aynı 100 USDT'yi kullanmaz. Üç bağımsız motorun kâr/zararı asla birleştirilmez. Tüm coinleri taramak API sınırları ve küçük kasada minimum tutarlar nedeniyle ağır olabilir.</div></section>
-<section class="panel"><h2>Canlı piyasa evreni</h2><p class="foot">CCXT, Bybit'in desteklediği aktif USDT lineer sürekli vadeli sözleşmeleri sorgular. Bu, hepsinde otomatik işlem açılacağı anlamına gelmez.</p><div id="markets" class="marketlist"><span>Veriler yükleniyor…</span></div><div id="marketError" class="foot alert"></div></section></div>
-<div class="sections"><section class="panel"><h2>Açık sanal pozisyonlar</h2><div class="tableWrap"><table class="table"><thead><tr><th>Coin</th><th>Yön</th><th>Açılış</th><th>Getiri</th><th>İşlem</th></tr></thead><tbody id="trades"><tr><td colspan="5">Motor bekleniyor…</td></tr></tbody></table></div></section><section class="panel"><h2>Bugünün yerel raporu</h2><div class="k">İSTANBUL TARİHİ · POLARS</div><div class="v" id="pnl">—</div><div class="sub" id="closed">Kapanan işlem verisi bekleniyor</div><div class="foot" id="reportState">Rapor, Freqtrade native API'den gelen işlemleri özetler; hayali kazanç göstermez.</div></section></div><p class="foot">Sabit TP, 20x, 12 coin gibi önceki bottan taşınan ayarlar bu pakette yok. Kaynak Freqtrade SampleStrategy dosyasının kendi ROI, stoploss, trailing ve LONG mantığı korunmuştur. Bu örnek strateji kârlılığı kanıtlanmış değildir. Teknik kurulumda Docker Compose ve motorların kendi kılavuzları geçerlidir.</p></main>
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>ATLAS Native 5 | Paper Trading Terminal</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#050c16; --sidebar:#07111e; --pane:#0b1a2b; --pane2:#0c2035;
+      --border:#1b3d58; --border-bright:#236188; --light:#edf7ff; --muted:#92aac1;
+      --blue:#35baff; --blue2:#5798ff; --green:#36e6aa; --red:#ff6f82; --amber:#ffce77;
+      --shadow:0 14px 40px rgba(0,0,0,.22);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;font-family:Inter,"Segoe UI",Arial,system-ui,sans-serif;background:var(--bg);color:var(--light);font-size:13px;line-height:1.46}
+    body::before{content:"";position:fixed;inset:0 0 auto;z-index:-1;height:400px;pointer-events:none;background:radial-gradient(ellipse at 43% -10%,#084b82a0 0%,transparent 50%),radial-gradient(ellipse at 95% 4%,#11395b66,transparent 50%)}
+    button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}a{color:inherit;text-decoration:none}svg{display:block}strong{font-weight:720}
+    .shell{display:flex;min-height:100vh}
+    .sidebar{width:219px;flex:0 0 219px;position:sticky;top:0;height:100vh;overflow:auto;padding:26px 13px 17px;background:linear-gradient(180deg,#071321 0%,#06101c 100%);border-right:1px solid #1a3853;display:flex;flex-direction:column;gap:34px}
+    .side-brand{display:flex;gap:11px;align-items:center;padding:4px 8px 1px}
+    .a-mark{display:grid;place-items:center;font-family:Arial,sans-serif;font-weight:950;letter-spacing:-7px;font-style:italic;font-size:42px;width:56px;height:52px;line-height:1;background:linear-gradient(132deg,#fff 23%,#95d8ff 42%,#24a9ff 69%,#116cb9 82%);color:transparent;background-clip:text;-webkit-background-clip:text;text-shadow:0 4px 24px #48baff66}
+    .brand-small{font-size:12px;font-weight:820;letter-spacing:.3px}.brand-edition{font-size:10px;color:#819ab2;margin-top:2px}
+    .nav{display:flex;flex-direction:column;gap:7px}
+    .nav-label{padding:0 13px 8px;font-size:10px;text-transform:uppercase;letter-spacing:1.6px;font-weight:750;color:#587d9d}
+    .nav-link{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:11px;color:#a8bfd1;font-weight:610;transition:.18s ease}
+    .nav-link:hover,.nav-link.active{color:#fff;background:#12355b}
+    .nav-link.active{box-shadow:inset 3px 0 var(--blue),0 4px 22px #0b65ad2a;border:1px solid #175b8b}
+    .nav-ico{display:grid;place-items:center;width:19px;height:19px;flex:none;font-size:17px;color:#a4c8e8}
+    .side-bottom{margin-top:auto;border:1px solid #1a4669;border-radius:13px;padding:13px;background:linear-gradient(160deg,#0b2542,#081728);display:flex;gap:10px;align-items:center}
+    .side-bottom .a-mark{width:30px;height:30px;font-size:30px;letter-spacing:-4px;flex:none}
+    .side-bottom strong{font-size:12px;display:block}.side-bottom small{display:block;font-size:10px;color:#9eb7d0;margin-top:3px}
+    .area{min-width:0;flex:1}
+    .masthead{min-height:83px;padding:16px 27px 14px 29px;border-bottom:1px solid #224661;background:radial-gradient(ellipse at 29% 0,#0d416b 0,transparent 57%),linear-gradient(120deg,#091828,#071321);display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .page-heading h1{font-size:25px;line-height:1.12;margin:0;font-weight:790;letter-spacing:.2px}.page-heading p{margin:4px 0 0;color:#abc3d8;font-size:12px}
+    .header-status{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #26506d;border-radius:9px;padding:9px 11px;font-size:11px;white-space:nowrap;background:#081d2f;color:#c2ddf0;font-weight:690}
+    .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+    .pill.safe{color:#6df2bd;border-color:#126c59;background:#052e29}
+    .pill.safe .dot,.pill.online .dot{background:var(--green);box-shadow:0 0 8px #43edbdaa}
+    .pill.error{color:#ff9baa;border-color:#743e52}
+    .clock{border-left:1px solid #315272;padding-left:15px;min-width:96px;font-size:16px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+    .clock small{display:block;font-size:10px;font-weight:550;color:#9bb6ca;letter-spacing:.3px}
+    .content{max-width:1920px;margin:0 auto;padding:20px 23px 42px}
+    .metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:15px}
+    .surface{border:1px solid var(--border);border-radius:14px;background:linear-gradient(145deg,#0e233a 0,#0a1b2d 60%,#081625 100%);box-shadow:var(--shadow);min-width:0;overflow:hidden}
+    .metric{position:relative;padding:15px 16px 14px;min-height:108px;border-color:#235171;background:linear-gradient(142deg,#102a46,#091b2f 75%)}
+    .metric::after{content:"";position:absolute;pointer-events:none;inset:auto -24px -38px auto;width:126px;height:100px;border:1px solid #2d9cce21;box-shadow:0 0 0 12px #2d9cce07,0 0 0 29px #2d9cce07;transform:rotate(28deg);border-radius:50%}
+    .metric-head{display:flex;align-items:center;gap:9px;font-weight:660;font-size:11px;color:#bfd8e9}
+    .metric-symbol{color:#63caff;font-size:18px;font-weight:800;line-height:1}
+    .metric-value{font-size:27px;font-weight:820;letter-spacing:-.8px;line-height:1.25;margin:9px 0 3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .metric-value em{font-size:15px;font-style:normal;color:#d4e8f8;letter-spacing:0}
+    .metric-note{font-size:10px;color:#8aa8c2}
+    .metric-value.bot{font-size:15px;margin:11px 0 7px;display:inline-flex;align-items:center;border:1px solid #0c855d;border-radius:8px;background:#07513e;color:#8effd2;padding:5px 11px;letter-spacing:0}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 302px;align-items:start;gap:14px}
+    .primary-column,.right-column{display:flex;flex-direction:column;gap:13px;min-width:0}
+    .split{display:grid;grid-template-columns:.95fr 1.05fr;gap:13px;align-items:stretch}
+    .panel{padding:16px 15px}
+    .section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:13px;margin-bottom:15px}
+    .title-group{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .title-icon{width:26px;height:26px;border:1px solid #246587;border-radius:8px;color:#67c9fc;background:#123858;display:grid;place-items:center;font-size:17px;font-weight:740;flex:none}
+    h2{font-size:15px;line-height:1.2;margin:2px 0 2px;font-weight:770;letter-spacing:.03px}
+    .section-sub{font-size:10px;color:#93b1ca}
+    .chip{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:690;border-radius:8px;border:1px solid #325274;background:#10253b;padding:5px 8px;color:#bbd6e9;white-space:nowrap}
+    .chip.good{border-color:#106f5c;color:#61e8b5;background:#062b27}.chip.muted{color:#99b0c4}.chip.info{border-color:#155d9e;background:#0b3254;color:#79cfff}
+    .engine-row{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #24425b;border-radius:10px;background:#09192a;margin-bottom:7px;min-width:0}
+    .engine-row.live{border-color:#126e64;background:linear-gradient(90deg,#0a282c,#0a1c2d 80%)}
+    .engine-icon{width:37px;height:37px;border:1px solid #1e4b71;border-radius:9px;background:#0d3150;display:grid;place-items:center;font-size:18px;font-weight:850;color:#4bc3f4;flex:none}
+    .engine-row:nth-child(3) .engine-icon{font-style:italic}.engine-meta{flex:1;min-width:0}.engine-name{font-weight:770;font-size:12px;line-height:1.25}.engine-detail{color:#89a6be;font-size:10px;margin-top:3px;white-space:normal}
+    .engine-row .chip{font-size:9px;max-width:142px;white-space:normal;text-align:center;justify-content:center;line-height:1.1}
+    .search{display:flex;align-items:center;gap:9px;border:1px solid #375a78;border-radius:10px;background:#0c2238;padding:0 11px;color:#72b9e9;margin:5px 0 10px}
+    .search input{min-width:0;width:100%;border:0;outline:0;background:transparent;height:38px;color:var(--light);font-size:11px}
+    .search input::placeholder{color:#88a7bd}
+    .tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+    .tab{border:1px solid #264a68;border-radius:16px;padding:6px 10px;background:#102539;color:#9cb9cf;font-size:10px;font-weight:650}
+    .tab.active{background:linear-gradient(120deg,#0a5a96,#117bbb);border-color:#2198df;color:#f4fbff}
+    .pairs{min-height:128px;max-height:230px;overflow:auto;display:flex;gap:6px;flex-wrap:wrap;align-content:flex-start;scrollbar-width:thin}
+    .pair{background:#0c1a2c;color:#bed5e8;border:1px solid #34536b;border-radius:8px;font-size:10px;padding:6px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .pair.is-open{color:#89f0c6;border-color:#238373;background:#0b302d}
+    .pair-empty{color:#91acc1;font-size:12px;line-height:1.6}
+    .market-foot{color:#86a4bf;font-size:10px;display:flex;justify-content:space-between;gap:7px;align-items:center;margin-top:10px}
+    .link-button{border:0;background:none;color:#5ebeff;font-weight:700;font-size:11px;padding:5px;white-space:nowrap}
+    .error-text{color:#ff98a7!important}
+    .controls{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:39px;background:linear-gradient(180deg,#1a4265,#113151);border:1px solid #3470a0;border-radius:9px;color:#ecf8ff;padding:9px 12px;font-size:11px;font-weight:750;transition:filter .16s ease,transform .16s ease;white-space:nowrap}
+    .btn:hover:not(:disabled){filter:brightness(1.22);transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,#0a9e72,#087052);border-color:#20b893;box-shadow:0 3px 14px #049d6727}
+    .btn.slim{min-height:29px;font-size:10px;padding:5px 8px}
+    .btn.danger{border-color:#954351;color:#ffc5cf;background:#3b1b2b}
+    .btn .mini-icon{font-size:14px;line-height:1}
+    .controls-info{margin-left:auto;font-size:10px;color:#90afc8;max-width:250px;text-align:right}
+    .positions-surface{padding-bottom:11px}
+    .positions-top{padding:16px 15px 0}
+    .table-scroller{overflow-x:auto;scrollbar-color:#275d7e #0d1b2a}
+    table{border-collapse:collapse;width:100%;min-width:950px;font-variant-numeric:tabular-nums}
+    thead th{text-align:right;padding:10px 9px;border-bottom:1px solid #28445d;font-size:9px;text-transform:uppercase;letter-spacing:.1px;font-weight:720;color:#8ba8be;white-space:nowrap;background:#0b1a2b}
+    thead th:first-child,tbody td:first-child{text-align:left}
+    tbody td{padding:13px 9px;text-align:right;border-bottom:1px solid #193a50;color:#dcecff;font-size:11px;white-space:nowrap}
+    tbody tr:hover{background:#11263b}
+    .symbol{text-align:left;font-weight:780;color:#f2f8ff}.symbol small{display:block;font-size:9px;color:#829eb6;font-weight:570;margin-top:3px}
+    .side-pill{border-radius:6px;border:1px solid #13795c;background:#0b392f;color:#57efb7;padding:4px 8px;font-size:10px;font-weight:780}
+    .side-pill.short{border-color:#9a5059;background:#391b28;color:#ff97a5}
+    .num-positive{color:#4beab0!important;font-weight:790}.num-negative{color:#ff7889!important;font-weight:790}
+    .no-data{text-align:center;color:#91afc5;font-size:12px;padding:29px 9px}
+    .trade-footer{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:8px 11px 1px;padding:12px;border:1px solid #1c455e;border-radius:10px;background:#102940}
+    .trade-footer span{font-size:10px;color:#a5c1d5}.trade-footer strong{font-size:11px;color:#f0f7fc}
+    .trade-footer .num-positive,.trade-footer .num-negative{font-size:12px}
+    .right-column .panel{padding:15px 14px}
+    .kpi-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #203c53;padding:9px 0;gap:15px;font-size:11px;color:#abc4d7}.kpi-row:last-of-type{border-bottom:0}.kpi-row strong{font-size:13px;color:#edf8ff;font-variant-numeric:tabular-nums}
+    .report-chart{width:100%;height:69px;border-radius:7px;background:linear-gradient(180deg,#092739,#081c2b);margin-top:8px;overflow:hidden;display:grid;place-items:center}
+    .chart-caption{color:#6f94ac;font-size:10px}
+    .risk-meter{width:100%;height:7px;background:#1c3852;overflow:hidden;border-radius:20px;margin:10px 0 5px}
+    .risk-meter>span{height:100%;background:linear-gradient(90deg,#1889bf,#58cdfd);display:block;width:0;border-radius:20px;transition:width .5s}
+    .note{padding:10px;border:1px solid #215473;background:#0b3047;border-radius:9px;font-size:10px;color:#a5d6ed;line-height:1.55;margin-top:11px}
+    .log-entry{display:flex;align-items:flex-start;gap:9px;border-bottom:1px solid #1d3d52;padding:9px 0;font-size:10px;color:#afc7d9}
+    .log-entry:last-child{border-bottom:none}.log-dot{width:7px;height:7px;border-radius:50%;background:#39bafa;flex:none;margin-top:4px}
+    .log-entry.good .log-dot{background:#35dfa5}.log-entry.bad .log-dot{background:#fa7d90}.log-entry time{color:#7f9db5;white-space:nowrap;font-variant-numeric:tabular-nums}.log-message{min-width:0;overflow-wrap:anywhere}
+    .tiny{font-size:10px;color:#83a4ba}.footer{color:#7f9bb1;font-size:10px;line-height:1.7;margin-top:14px;padding:0 3px}
+    .toast{position:fixed;right:24px;bottom:22px;z-index:30;max-width:min(460px,calc(100vw - 32px));padding:13px 17px;background:#0d3345;border:1px solid #2384ac;box-shadow:0 15px 55px #0009;border-radius:11px;color:#e8f7ff;font-size:12px;opacity:0;pointer-events:none;transform:translateY(9px);transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translateY(0)}.toast.is-error{border-color:#ad5264;background:#382032}
+    ::selection{background:#177cac;color:white}
+    @media(max-width:1540px){.sidebar{width:193px;flex-basis:193px}.content{padding:18px 15px 35px}.masthead{padding-left:19px;padding-right:18px}.layout{grid-template-columns:minmax(0,1fr) 280px}.panel{padding:14px 12px}.metric{padding:13px 12px}.metric-value{font-size:24px}.split{gap:10px}.engine-icon{width:31px;height:31px}.engine-row{gap:8px;padding:9px 8px}}
+    @media(max-width:1200px){.layout{grid-template-columns:1fr}.right-column{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.right-column .panel{min-width:0}.metrics{gap:8px}.header-status .pill{padding:7px}}
+    @media(max-width:880px){.shell{display:block}.sidebar{position:static;width:100%;height:auto;padding:8px 15px;flex-direction:row;align-items:center;gap:15px;border-right:0;border-bottom:1px solid var(--border)}.side-brand{padding:0}.side-brand .a-mark{height:30px;font-size:27px;width:35px;letter-spacing:-4px}.nav{flex:1;flex-direction:row;overflow:auto;gap:3px}.nav-label,.side-bottom{display:none}.nav-link{white-space:nowrap;padding:8px;font-size:11px}.nav-ico{display:none}.masthead{padding:14px}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.split{grid-template-columns:1fr 1fr}.content{padding:13px}.right-column{grid-template-columns:repeat(2,minmax(0,1fr))}.right-column .panel:last-child{grid-column:1/-1}}
+    @media(max-width:650px){.split,.right-column{grid-template-columns:1fr}.right-column .panel:last-child{grid-column:auto}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{min-height:98px}.metric-value{font-size:25px}.masthead{align-items:flex-start;flex-direction:column;gap:11px}.header-status{justify-content:flex-start}.clock{display:none}.page-heading h1{font-size:20px}.sidebar{overflow:auto}.nav{width:100%}.brand-small,.brand-edition{display:none}.controls-info{margin-left:0;text-align:left;max-width:none;width:100%}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" aria-label="Sayfa menüsü">
+    <div class="side-brand"><div class="a-mark" aria-hidden="true">A</div><div><div class="brand-small">ATLAS Native 5</div><div class="brand-edition">Trading Command</div></div></div>
+    <nav class="nav">
+      <div class="nav-label">PANEL</div>
+      <a class="nav-link active" href="#overview"><span class="nav-ico">⌂</span>Genel Bakış</a>
+      <a class="nav-link" href="#openPositions"><span class="nav-ico">◈</span>Sanal İşlemler</a>
+      <a class="nav-link" href="#markets-panel"><span class="nav-ico">▥</span>Piyasa Evreni</a>
+      <a class="nav-link" href="#engines"><span class="nav-ico">▤</span>İşlem Motorları</a>
+      <a class="nav-link" href="#report"><span class="nav-ico">⌁</span>Günlük Rapor</a>
+      <a class="nav-link" href="#activity"><span class="nav-ico">☷</span>Hareketler</a>
+    </nav>
+    <div class="side-bottom"><div class="a-mark" aria-hidden="true">A</div><div><strong>ATLAS-Native-5</strong><small>Freqtrade · CCXT<br>Yalnızca sanal işlemler</small></div></div>
+  </aside>
+  <div class="area">
+    <header class="masthead" id="overview">
+      <div class="page-heading"><h1>ATLAS-Native-5</h1><p>Paper Trading Command Center · Sanal İşlem Terminali</p></div>
+      <div class="header-status">
+        <span class="pill safe" id="paperBadge"><span class="dot"></span>SANAL MOD · DRY-RUN</span>
+        <span class="pill" id="connected"><span class="dot"></span>Freqtrade bağlanıyor</span>
+        <span class="pill" id="marketBadge"><span class="dot"></span>CCXT veri bekliyor</span>
+        <div class="clock" id="clock">--:--:--<small>İSTANBUL · TR</small></div>
+      </div>
+    </header>
+    <main class="content">
+      <div class="metrics" aria-label="Genel sistem özeti">
+        <section class="surface metric"><div class="metric-head"><span class="metric-symbol">◉</span>Başlangıç Kasası</div><div class="metric-value"><span id="initialBalance">100</span> <em>USDT</em></div><div class="metric-note">Freqtrade sanal cüzdan</div></section>
+        <section class="surface metric"><div class="metric-head"><span class="metric-symbol">▣</span>Güncel Sanal Bakiye</div><div class="metric-value" id="balance">—</div><div class="metric-note">Freqtrade /balance verisi</div></section>
+        <section class="surface metric"><div class="metric-head"><span class="metric-symbol">◈</span>Açık Pozisyon</div><div class="metric-value" id="positions">—</div><div class="metric-note" id="positionLimit">Canlı motor kayıtları</div></section>
+        <section class="surface metric"><div class="metric-head"><span class="metric-symbol">▥</span>Aktif USDT Perpetual</div><div class="metric-value" id="coinCount">—</div><div class="metric-note">Bybit · CCXT keşfi</div></section>
+        <section class="surface metric"><div class="metric-head"><span class="metric-symbol">⌁</span>Motor Durumu</div><div class="metric-value bot" id="botState">BAĞLANIYOR</div><div class="metric-note" id="strategyName">Freqtrade bekleniyor</div></section>
+      </div>
+      <div class="layout">
+        <div class="primary-column">
+          <div class="split">
+            <section class="surface panel" id="engines">
+              <div class="section-title"><div class="title-group"><span class="title-icon">▤</span><div><h2>İşlem Motorları</h2><div class="section-sub">Sanal işlem ve analiz altyapısı</div></div></div></div>
+              <div class="engine-row live"><div class="engine-icon">F</div><div class="engine-meta"><div class="engine-name">Freqtrade</div><div class="engine-detail" id="ftStrategy">Birincil sanal işlem motoru</div></div><span class="chip" id="ftState">Bekleniyor</span></div>
+              <div class="engine-row"><div class="engine-icon">H</div><div class="engine-meta"><div class="engine-name">Hummingbot</div><div class="engine-detail">Bağımsız paper-trade motoru</div></div><span class="chip muted">Ayrı servis</span></div>
+              <div class="engine-row"><div class="engine-icon">N</div><div class="engine-meta"><div class="engine-name">NautilusTrader</div><div class="engine-detail">Araştırma ve backtest</div></div><span class="chip muted" id="ntState">Ayrı profil</span></div>
+              <div class="engine-row"><div class="engine-icon">▥</div><div class="engine-meta"><div class="engine-name">CCXT + Polars</div><div class="engine-detail">Piyasa keşfi / gerçek veri raporu</div></div><span class="chip info">Analiz</span></div>
+            </section>
+            <section class="surface panel" id="markets-panel">
+              <div class="section-title"><div class="title-group"><span class="title-icon">▥</span><div><h2>Canlı Piyasa Evreni</h2><div class="section-sub">USDT lineer perpetual sözleşmeler</div></div></div><span class="chip info" id="marketCountLabel">— coin</span></div>
+              <label class="search"><span aria-hidden="true">⌕</span><input type="search" id="marketSearch" placeholder="Coin ara... BTC, INJ, SAPIEN" autocomplete="off" aria-label="Piyasada coin ara"></label>
+              <div class="tabs" id="marketTabs" role="group" aria-label="Piyasa filtresi">
+                <button class="tab active" data-filter="all" aria-pressed="true">Tümü</button>
+                <button class="tab" data-filter="open" aria-pressed="false">Pozisyondakiler</button>
+                <button class="tab" data-filter="major" aria-pressed="false">Majörler</button>
+              </div>
+              <div class="pairs" id="markets"><div class="pair-empty">Piyasa verileri yükleniyor…</div></div>
+              <div class="market-foot"><span id="marketMeta">CCXT verisi bekleniyor</span><button class="link-button" id="loadMore" hidden>Daha fazla göster</button></div>
+              <div class="tiny error-text" id="marketError" role="status"></div>
+            </section>
+          </div>
+          <section class="surface controls" aria-label="Sanal işlem kontrolleri">
+            <button class="btn primary" id="startBtn" disabled><span class="mini-icon">▶</span><span id="startText">Sanal Botu Başlat</span></button>
+            <button class="btn" id="pauseBtn" disabled><span class="mini-icon">Ⅱ</span>Yeni Girişleri Durdur</button>
+            <button class="btn" id="downloadBtn"><span class="mini-icon">↓</span>Günlük JSON İndir</button>
+            <button class="btn" id="refreshBtn"><span class="mini-icon">⟳</span>Yenile</button>
+            <span class="controls-info" id="refreshAt">Sistem verileri bekleniyor</span>
+          </section>
+          <section class="surface positions-surface" id="openPositions">
+            <div class="positions-top"><div class="section-title"><div class="title-group"><span class="title-icon">◈</span><div><h2>Açık Sanal Pozisyonlar <span id="openCountTitle">(—)</span></h2><div class="section-sub">Freqtrade canlı dry-run işlem kayıtları · USDT</div></div></div><span class="chip good">SANAL</span></div></div>
+            <div class="table-scroller"><table aria-label="Açık sanal işlemler"><thead><tr><th>Coin / Sembol</th><th>Yön</th><th>Kaldıraç</th><th>Teminat</th><th>Miktar</th><th>Giriş</th><th>Güncel</th><th>Stop</th><th>K/Z (USDT)</th><th>Getiri %</th><th>İşlem</th></tr></thead><tbody id="trades"><tr><td colspan="11" class="no-data">Freqtrade'den pozisyon verileri bekleniyor…</td></tr></tbody></table></div>
+            <div class="trade-footer" aria-label="Açık pozisyon toplamları"><span>Toplam teminat: <strong id="totalMargin">—</strong></span><span>Pozisyon büyüklüğü: <strong id="notional">—</strong></span><span>Gerçekleşmemiş K/Z: <strong id="unrealized">—</strong></span><span>Teminat getirisi: <strong id="openRoi">—</strong></span></div>
+          </section>
+        </div>
+        <aside class="right-column">
+          <section class="surface panel" id="report"><div class="section-title"><div class="title-group"><span class="title-icon">⌁</span><div><h2>Bugünün Performansı</h2><div class="section-sub">İstanbul tarihi · Polars</div></div></div><span class="chip muted">BUGÜN</span></div>
+            <div class="kpi-row"><span>Gerçekleşmiş K/Z</span><strong id="pnl">—</strong></div>
+            <div class="kpi-row"><span>Başarı oranı</span><strong id="winRate">—</strong></div>
+            <div class="kpi-row"><span>Kapanan işlem</span><strong id="closedCount">—</strong></div>
+            <div class="report-chart" id="chart"><span class="chart-caption">Henüz kapanan işlem grafiği yok</span></div>
+            <div class="tiny" id="reportState" style="margin-top:9px">Yalnızca gerçek sanal kapanışlar raporlanır.</div>
+          </section>
+          <section class="surface panel" id="risk"><div class="section-title"><div class="title-group"><span class="title-icon">⬡</span><div><h2>Risk ve Teminat</h2><div class="section-sub">Açık pozisyonların özeti</div></div></div></div>
+            <div class="kpi-row"><span>Kullanılan teminat</span><strong id="riskMargin">—</strong></div>
+            <div class="kpi-row"><span>Ort. kaldıraç</span><strong id="avgLeverage">—</strong></div>
+            <div class="kpi-row"><span>Yaklaşık pozisyon değeri</span><strong id="riskNotional">—</strong></div>
+            <div class="risk-meter" aria-label="Teminat kullanım oranı"><span id="riskBar"></span></div>
+            <div class="market-foot"><span>Teminat / başlangıç kasası</span><strong id="riskPercent">—</strong></div>
+            <div class="note">ⓘ Yalnızca simülasyon. Gerçek para kullanılmaz. Kaldıraç ve K/Z değerleri Freqtrade API'sinden alınır.</div>
+          </section>
+          <section class="surface panel" id="activity"><div class="section-title"><div class="title-group"><span class="title-icon">☷</span><div><h2>İşlem Hareketleri</h2><div class="section-sub">Motor verilerinden son kayıtlar</div></div></div><span class="chip good" id="feedStatus">CANLI</span></div>
+            <div id="feed"><div class="log-entry"><span class="log-dot"></span><span class="log-message">Son hareketler yükleniyor…</span></div></div>
+          </section>
+        </aside>
+      </div>
+      <div class="footer">ATLAS-Native-5 · Görsel terminal V2 · Yalnızca arayüz güncellemesi. Freqtrade stratejisi, işlem limitleri, Dockerfile, Railway Volume, API bağlantıları ve sanal işlem kayıtları değiştirilmez. Piyasa evrenindeki sözleşmelerin tamamında işlem açılacağı garanti edilmez. SampleStrategy kârlılığı doğrulanmış bir strateji değildir.</div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-const $=x=>document.getElementById(x); const nf=x=>x==null?'—':Number(x).toLocaleString('tr-TR',{maximumFractionDigits:4});
-async function get(path){let r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
-async function refresh(){try{let s=await get('/api/status');$('connected').textContent=s.freqtrade_connected?'FREQTRADE: DRY-RUN AKTİF':'MOTOR BAĞLANTISI YOK';$('connected').style.color=s.freqtrade_connected?'var(--green)':'var(--red)';$('ftState').textContent=s.freqtrade_connected?'Bağlı · '+(s.freqtrade_config?.state||'sanal'):'Bağlı değil';let b=s.balance||{};let usable= b.currencies?.find?.(a=>a.currency==='USDT');$('balance').textContent=usable?nf(usable.balance)+' USDT':'—';let p=Array.isArray(s.positions)?s.positions:[];$('positions').textContent=s.freqtrade_connected?p.length:'—';$('trades').innerHTML=p.length?p.map(t=>`<tr><td>${esc(t.pair)}</td><td>${t.is_short?'SHORT':'LONG'}</td><td>${nf(t.open_rate)}</td><td>${nf(t.profit_pct)}%</td><td><button data-close="${Number(t.trade_id??t.id)}">Sanal kapat</button></td></tr>`).join(''):'<tr><td colspan="5">Açık sanal pozisyon yok.</td></tr>';$('ntState').textContent=s.nautilus?.state||'Ayrı profil açılmadı';document.querySelectorAll('button[data-close]').forEach(b=>b.onclick=()=>send('close_paper_trade',Number(b.dataset.close)));}catch(e){$('connected').textContent='SUNUCU HATASI';console.error(e)}try{let m=await get('/api/markets');$('coinCount').textContent=m.error?'—':nf(m.count);$('markets').innerHTML=(m.symbols||[]).slice(0,90).map(x=>`<span>${esc(x)}</span>`).join('')||'<span>Veri bulunamadı</span>';$('marketError').textContent=(m.error||'')+(m.count>90?` · İlk 90/${m.count} gösteriliyor.`:'');}catch(e){$('marketError').textContent=String(e)}try{let d=await get('/api/daily');$('pnl').textContent=(d.pnl_usdt>=0?'+':'')+nf(d.pnl_usdt)+' USDT';$('pnl').className='v '+(d.pnl_usdt>=0?'green':'red');$('closed').textContent=d.count+' kapanmış sanal işlem · '+(d.win_rate_pct==null?'Başarı ölçülemedi':d.win_rate_pct+'% başarı');$('reportState').textContent=d.pagination_note;}catch(e){$('reportState').textContent='Rapor henüz üretilemiyor: '+e.message;}}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-async function send(command,trade_id){if(command==='close_paper_trade'&&!confirm('Bu SANAL pozisyon kapatılsın mı?'))return;try{let r=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','x-atlas-action':'1'},body:JSON.stringify({command,trade_id})});let d=await r.json();if(!r.ok)throw Error(d.detail||r.status);await refresh()}catch(e){alert('Komut uygulanamadı: '+e.message)}}
-function download(){location.href='/api/daily/download'}
-refresh();setInterval(refresh,60000);
-</script></body></html>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const state = { status:null, daily:null, markets:[], marketError:null, marketCount:null, filter:'all', query:'', marketLimit:48, busy:false, lastStatusAt:null };
+  const finite = x => x!==null && x!==undefined && x!=='' && Number.isFinite(Number(x));
+  const fnum = (x,d=2) => finite(x) ? Number(x).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d}) : '—';
+  const fmtPrice = x => !finite(x) ? '—' : Number(x).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:Math.abs(Number(x))<.01?8:Math.abs(Number(x))<1?6:4});
+  const fmtAmount = x => !finite(x) ? '—' : Number(x).toLocaleString('tr-TR',{maximumFractionDigits:6});
+  const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const displayNumber = x => Math.abs(Number(x))<0.005 ? 0 : Number(x);
+  const usd = x => finite(x) ? fnum(displayNumber(x),2)+' USDT' : '—';
+  const signedUsd = x => finite(x) ? (displayNumber(x)>0?'+':'')+usd(x) : '—';
+  const pct = x => finite(x) ? (displayNumber(x)>0?'+':'')+fnum(displayNumber(x),2)+'%' : '—';
+  const colorClass = x => !finite(x)?'':displayNumber(x)>0?'num-positive':displayNumber(x)<0?'num-negative':'';
+  const value = (obj,keys) => {for(const k of keys){if(obj && finite(obj[k]))return Number(obj[k]);}return null;};
+  const pairName = t => String(t && t.pair || '—');
+  const currency = t => String(t && t.base_currency || pairName(t).split('/')[0] || '');
+  const currentPositions = () => Array.isArray(state.status?.positions)?state.status.positions:[];
+  const isConnected = () => state.status?.freqtrade_connected===true && state.status?.freqtrade_config?.dry_run===true;
+  const isRunning = () => isConnected() && String(state.status?.freqtrade_config?.state||'').toLowerCase()==='running';
+  let toastTimer = null;
+  function toast(message,error=false){const el=$('toast');el.textContent=String(message);el.classList.toggle('is-error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),5500);}
+  function updateClock(){const dt=new Date();$('clock').innerHTML=esc(new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(dt))+'<small>İSTANBUL · TR</small>';}
+  async function get(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json();}
+  function formatTime(iso){if(!iso)return '—';let s=String(iso);if(/^\d{4}-\d\d-\d\d \d\d:\d\d/.test(s))s=s.replace(' ','T');if(!/[zZ]|[+\-]\d\d:\d\d$/.test(s))s+='Z';const d=new Date(s);return Number.isNaN(d.getTime())?'—':new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);}
+  function showSummary(){
+    const s=state.status;if(!s)return;const connected=isConnected(), cfg=s.freqtrade_config||{};
+    $('paperBadge').textContent=connected?'● SANAL MOD · DRY-RUN':'● SANAL MOD KONTROL EDİLİYOR';
+    $('paperBadge').classList.toggle('error',!connected);$('paperBadge').classList.toggle('safe',connected);
+    $('connected').innerHTML='<span class="dot"></span>'+(connected?'Freqtrade bağlı':'Freqtrade bağlı değil');
+    $('connected').classList.toggle('online',connected);$('connected').classList.toggle('error',!connected);
+    $('ftState').textContent=connected?(isRunning()?'● Bağlı · Çalışıyor':'● Bağlı · '+String(cfg.state||'hazır')):'Bağlantı yok';
+    $('ftState').className='chip '+(connected?'good':'muted');
+    $('ftStrategy').textContent='Birincil · '+String(cfg.strategy||'Strateji bekleniyor')+' · dry-run';
+    $('strategyName').textContent=connected?(String(cfg.strategy||'Strateji belirsiz')+' · dry-run'):'Bağlantı kontrol ediliyor';
+    $('botState').textContent=connected?(isRunning()?'ÇALIŞIYOR':String(cfg.state||'HAZIR').toUpperCase()):'BAĞLANTI YOK';
+    $('botState').style.borderColor=connected?'#0c855d':'#884757';$('botState').style.background=connected?'#07513e':'#442534';$('botState').style.color=connected?'#8effd2':'#ffbcc7';
+    if(finite(s.paper_wallet_start_usdt))$('initialBalance').textContent=fnum(s.paper_wallet_start_usdt,0);
+    const u=s.balance?.currencies?.find?.(a=>a.currency==='USDT');$('balance').textContent=usd(u?.balance);
+    const positions=currentPositions();$('positions').textContent=connected?String(positions.length):'—';
+    const max=cfg.max_open_trades;$('positionLimit').textContent=finite(max)&&Number(max)>=0?'Eşzamanlı limit: '+fnum(max,0):'Mevcut yapılandırma';
+    $('openCountTitle').textContent='('+positions.length+')';
+    $('ntState').textContent=String(s.nautilus?.state||'Ayrı profil');
+    $('startBtn').disabled=!connected||isRunning()||state.busy;
+    $('pauseBtn').disabled=!connected||!isRunning()||state.busy;
+    $('startText').textContent=isRunning()?'Bot Çalışıyor':'Sanal Botu Başlat';
+    $('refreshAt').textContent='Güncelleme: '+new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
+    $('feedStatus').textContent=connected?'BAĞLI':'ÇEVRİMDIŞI';$('feedStatus').className='chip '+(connected?'good':'muted');
+    showPositions();showRisk();showMarket();showFeed();
+  }
+  function showPositions(){
+    const trades=currentPositions(), el=$('trades');
+    if(!isConnected()){el.innerHTML='<tr><td colspan="11" class="no-data">Freqtrade bağlantısı doğrulanamadı. Sonuçlar gösterilmiyor.</td></tr>';return;}
+    if(!trades.length){el.innerHTML='<tr><td colspan="11" class="no-data">Şu anda açık sanal pozisyon yok. Bot koşulları oluştuğunda burada görünecek.</td></tr>';return;}
+    el.innerHTML=trades.map(t=>{
+      const id=Number(t.trade_id??t.id),profit=value(t,['profit_abs']),gain=value(t,['profit_pct']),lev=value(t,['leverage']),stake=value(t,['stake_amount']),amt=value(t,['amount']),stop=value(t,['stop_loss_abs','stop_loss']);
+      const validID=Number.isInteger(id)&&id>0;
+      return '<tr><td class="symbol">'+esc(pairName(t))+'<small>'+(validID?'İşlem #'+id:'Sanal pozisyon')+'</small></td>'+
+       '<td><span class="side-pill '+(t.is_short?'short':'')+'">'+(t.is_short?'SHORT':'LONG')+'</span></td>'+
+       '<td>'+(finite(lev)?fnum(lev,1)+'x':'—')+'</td>'+
+       '<td>'+usd(stake)+'</td><td>'+esc(fmtAmount(amt))+' '+esc(currency(t))+'</td>'+
+       '<td>'+esc(fmtPrice(t.open_rate))+'</td><td>'+esc(fmtPrice(t.current_rate))+'</td><td>'+esc(fmtPrice(stop))+'</td>'+
+       '<td class="'+colorClass(profit)+'">'+signedUsd(profit)+'</td><td class="'+colorClass(gain)+'">'+pct(gain)+'</td>'+
+       '<td>'+(validID?'<button class="btn danger slim" data-close="'+id+'" title="Bu sanal işlemi kapat">Sanal Kapat</button>':'—')+'</td></tr>';
+    }).join('');
+  }
+  function aggregateRisk(){
+    const trades=currentPositions();if(!isConnected())return {margin:null,notional:null,pnl:null,roi:null,avgLeverage:null};
+    if(!trades.length)return {margin:0,notional:0,pnl:0,roi:null,avgLeverage:null};
+    const marginValues=trades.map(t=>value(t,['stake_amount']));
+    const profitValues=trades.map(t=>value(t,['profit_abs']));
+    const notionals=trades.map(t=>{const amt=value(t,['amount']),rate=value(t,['current_rate']);return amt!==null&&rate!==null?amt*rate:null;});
+    const margin=marginValues.every(v=>v!==null)?marginValues.reduce((a,b)=>a+b,0):null;
+    const pnl=profitValues.every(v=>v!==null)?profitValues.reduce((a,b)=>a+b,0):null;
+    const notional=notionals.every(v=>v!==null)?notionals.reduce((a,b)=>a+b,0):null;
+    const leverageValues=trades.map(t=>value(t,['leverage']));
+    const weighted=margin!==null && margin>0 && leverageValues.every(v=>v!==null) ? leverageValues.reduce((total,l,i)=>total+l*marginValues[i],0)/margin:null;
+    return {margin,notional,pnl,roi:margin>0&&pnl!==null?pnl/margin*100:null,avgLeverage:weighted};
+  }
+  function showRisk(){const a=aggregateRisk();
+    $('totalMargin').textContent=usd(a.margin);$('notional').textContent=usd(a.notional);$('unrealized').textContent=signedUsd(a.pnl);$('unrealized').className=colorClass(a.pnl);
+    $('openRoi').textContent=pct(a.roi);$('openRoi').className=colorClass(a.roi);
+    $('riskMargin').textContent=usd(a.margin);$('riskNotional').textContent=usd(a.notional);
+    $('avgLeverage').textContent=finite(a.avgLeverage)?fnum(a.avgLeverage,2)+'x':'—';
+    const wallet=value(state.status,['paper_wallet_start_usdt']);const percentage=wallet>0 && a.margin!==null?a.margin/wallet*100:null;
+    $('riskPercent').textContent=finite(percentage)?fnum(percentage,1)+'%':'—';$('riskBar').style.width=finite(percentage)?Math.max(0,Math.min(100,percentage))+'%':'0%';
+  }
+  function showMarket(){
+    const markets=state.markets||[], s=state.status;
+    $('coinCount').textContent=state.marketError||state.marketCount===null?'—':fnum(state.marketCount,0);
+    $('marketCountLabel').textContent=state.marketCount===null?'— coin':fnum(state.marketCount,0)+' coin';
+    $('marketBadge').innerHTML='<span class="dot"></span>'+(state.marketError?'CCXT erişim hatası':state.marketCount!==null?'CCXT bağlı':'CCXT veri bekliyor');
+    $('marketBadge').classList.toggle('online',!state.marketError&&state.marketCount!==null);
+    $('marketBadge').classList.toggle('error',!!state.marketError);
+    $('marketError').textContent=state.marketError?('Piyasa verisi: '+state.marketError):'';
+    const opened=new Set(currentPositions().map(t=>pairName(t).toUpperCase()));
+    const majors=new Set(['BTC','ETH','SOL','XRP','BNB','DOGE','ADA','AVAX','LINK','LTC','DOT','TRX','SUI','BCH','TON']);
+    let results=markets.filter(m=>{const upper=String(m).toUpperCase();if(state.filter==='open'&&!opened.has(upper))return false;if(state.filter==='major'&&!majors.has(upper.split('/')[0]))return false;return upper.includes(state.query.toUpperCase());});
+    const shown=results.slice(0,state.marketLimit);
+    $('markets').innerHTML=shown.length?shown.map(m=>'<span class="pair '+(opened.has(String(m).toUpperCase())?'is-open':'')+'">'+esc(m)+'</span>').join(''):'<div class="pair-empty">'+(state.marketError?'Piyasa verisine erişilemiyor.':markets.length?'Bu filtreye uygun sözleşme yok.':'Piyasa verileri yükleniyor…')+'</div>';
+    $('marketMeta').textContent=markets.length?fnum(shown.length,0)+' / '+fnum(results.length,0)+' gösteriliyor':'Güncel piyasa listesi bekleniyor';
+    $('loadMore').hidden=results.length<=state.marketLimit;
+  }
+  function showDaily(){const d=state.daily;if(!d)return;
+    $('pnl').textContent=signedUsd(d.pnl_usdt);$('pnl').className=colorClass(d.pnl_usdt);
+    $('winRate').textContent=finite(d.win_rate_pct)?fnum(d.win_rate_pct,1)+'%':'—';
+    $('closedCount').textContent=finite(d.count)?fnum(d.count,0):'—';
+    $('reportState').textContent=d.pagination_note||'Gerçek Freqtrade kapanışları raporlanıyor.';
+    const trades=Array.isArray(d.trades)?d.trades.filter(t=>finite(t.pnl)).slice().sort((a,b)=>String(a.close_date).localeCompare(String(b.close_date))):[];
+    if(!trades.length){$('chart').innerHTML='<span class="chart-caption">Henüz kapanan sanal işlem yok</span>';showFeed();return;}
+    let series=[0],sum=0;for(const t of trades){sum+=Number(t.pnl);series.push(sum);}const max=Math.max(...series),min=Math.min(...series);const range=Math.max(.01,max-min);
+    const points=series.map((v,i)=>[8+i*(284/Math.max(1,series.length-1)),69-12-(v-min)/range*44]);
+    const line=points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const fill=line+' L '+points.at(-1)[0].toFixed(1)+' 69 L 8 69 Z';
+    const c=sum>=0?'#36e6aa':'#ff6f82';
+    $('chart').innerHTML='<svg viewBox="0 0 300 70" role="img" aria-label="Bugünkü kapanmış işlemlerin birikimli kâr zarar grafiği" width="100%" height="69" preserveAspectRatio="none"><path d="'+fill+'" fill="'+c+'" fill-opacity=".11"/><path d="'+line+'" fill="none" stroke="'+c+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    showFeed();
+  }
+  function showFeed(){let entries=[];const d=state.daily;
+    if(Array.isArray(d?.trades))for(const t of d.trades){entries.push({ts:t.close_date,text:'Kapanış · '+String(t.pair||'—')+' · '+signedUsd(t.pnl),ok:Number(t.pnl)>=0});}
+    for(const t of currentPositions()){entries.push({ts:t.open_date||t.open_date_utc,text:'Açık · '+pairName(t)+' · '+(t.is_short?'SHORT':'LONG')+(finite(t.leverage)?' · '+fnum(t.leverage,1)+'x':''),ok:true});}
+    entries=entries.sort((a,b)=>new Date(String(b.ts).replace(' ','T')).getTime()-new Date(String(a.ts).replace(' ','T')).getTime()).slice(0,7);
+    if(!entries.length){$('feed').innerHTML='<div class="log-entry"><span class="log-dot"></span><span class="log-message">Henüz pozisyon hareketi yok. Bu alanda Freqtrade işlemleri görünecek.</span></div>';return;}
+    $('feed').innerHTML=entries.map(e=>'<div class="log-entry '+(e.ok?'good':'bad')+'"><span class="log-dot"></span><time>'+esc(formatTime(e.ts))+'</time><span class="log-message">'+esc(e.text)+'</span></div>').join('');
+  }
+  async function refreshStatus(){try{state.status=await get('/api/status');state.lastStatusAt=Date.now();showSummary();if(!isConnected() && state.status.error)toast(String(state.status.error),true);}catch(err){$('connected').innerHTML='<span class="dot"></span>Panel bağlantı hatası';$('connected').classList.remove('online');$('connected').classList.add('error');$('refreshAt').textContent='Son güncelleme başarısız';$('feedStatus').textContent='VERİ ALINAMADI';console.warn('Status request failed',err);}}
+  async function refreshMarkets(){try{const m=await get('/api/markets');state.marketCount=finite(m.count)?Number(m.count):null;state.markets=Array.isArray(m.symbols)?m.symbols:[];state.marketError=m.error||null;showMarket();}catch(err){state.marketError=err.message;showMarket();}}
+  async function refreshDaily(){try{state.daily=await get('/api/daily');showDaily();}catch(err){$('reportState').textContent='Rapor alınamadı: '+err.message;$('reportState').classList.add('error-text');}}
+  async function refreshAll(){await Promise.allSettled([refreshStatus(),refreshMarkets(),refreshDaily()]);}
+  async function send(command,trade_id){
+    if(state.busy)return;
+    if(!isConnected()){toast('Sanal motor bağlantısı doğrulanamadı.',true);return;}
+    if(command==='start'&&isRunning()){toast('Freqtrade zaten çalışıyor.');return;}
+    if(command==='pause'&&!isRunning()){toast('Yeni girişler zaten durdurulmuş.');return;}
+    if(command==='close_paper_trade'&&!confirm('Bu SANAL pozisyon kapatılsın mı? İşlem gerçek Freqtrade dry-run kaydına uygulanır.'))return;
+    state.busy=true;$('startBtn').disabled=true;$('pauseBtn').disabled=true;
+    try{
+      const r=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','x-atlas-action':'1'},body:JSON.stringify({command,trade_id})});
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok)throw Error(String(data.detail||data.error||('HTTP '+r.status)));
+      toast(command==='close_paper_trade'?'Sanal kapatma komutu gönderildi.':command==='pause'?'Yeni girişleri durdurma komutu gönderildi.':'Sanal motor başlatma komutu gönderildi.');
+    }catch(err){toast('Komut uygulanamadı: '+err.message,true);}finally{state.busy=false;await refreshStatus();}
+  }
+  $('marketSearch').addEventListener('input',e=>{state.query=String(e.target.value||'').trim();state.marketLimit=48;showMarket();});
+  $('marketTabs').addEventListener('click',e=>{const b=e.target.closest('button[data-filter]');if(!b)return;state.filter=b.dataset.filter;state.marketLimit=48;document.querySelectorAll('#marketTabs button').forEach(n=>{const active=n===b;n.classList.toggle('active',active);n.setAttribute('aria-pressed',String(active));});showMarket();});
+  $('loadMore').addEventListener('click',()=>{state.marketLimit+=48;showMarket();});
+  $('startBtn').addEventListener('click',()=>send('start'));
+  $('pauseBtn').addEventListener('click',()=>send('pause'));
+  $('downloadBtn').addEventListener('click',()=>{window.location.href='/api/daily/download';});
+  $('refreshBtn').addEventListener('click',()=>{toast('Veriler yenileniyor…');refreshAll();});
+  $('trades').addEventListener('click',e=>{const btn=e.target.closest('button[data-close]');if(btn){const id=Number(btn.dataset.close);if(Number.isInteger(id)&&id>0)send('close_paper_trade',id);}});
+  document.querySelectorAll('.nav-link').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.nav-link').forEach(n=>n.classList.toggle('active',n===el));}));
+  updateClock();setInterval(updateClock,1000);
+  refreshAll();setInterval(refreshStatus,15000);setInterval(refreshDaily,60000);setInterval(refreshMarkets,180000);
+})();
+</script>
+</body>
+</html>
