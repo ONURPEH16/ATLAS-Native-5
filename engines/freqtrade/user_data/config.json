@@ -38,7 +38,6 @@
     "username": "native_internal",
     "password": "OVERRIDE_WITH_FT_API_PASSWORD_ENV"
   },
-  "telegram": {"enabled": false},
   "force_entry_enable": false,
   "internals": {"process_throttle_secs": 5}
 }
